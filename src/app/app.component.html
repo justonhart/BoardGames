@@ -1,0 +1,17 @@
+<html>
+  <mat-toolbar>
+    <span>{{title}}</span>
+    <span class="example-fill-remaining-space"></span>
+    <span>Tool feature buttons will be here</span>
+  </mat-toolbar>
+  <mat-drawer-container>
+    <mat-drawer  disableClose="true" mode="side" opened>
+      <div>
+          <app-toolbox></app-toolbox>
+      </div>
+    </mat-drawer>
+    <mat-drawer-content>
+      <app-workspace></app-workspace>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</html>
