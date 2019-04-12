@@ -7,9 +7,18 @@ import { Component, AfterViewInit } from '@angular/core';
 })
 export class WorkspaceComponent implements AfterViewInit {
   
+  buttonText: number = 2;
+
   constructor() { }
 
   ngAfterViewInit() {
   }
 
+  onClick(): void{
+    this.buttonText++;
+  }
+
+  onDoubleClick(): void{
+    console.log('DOUBLE');
+  }
 }
