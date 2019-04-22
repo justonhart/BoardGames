@@ -1,8 +1,9 @@
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { ToolSelectorService } from '../tool-selector.service';
 
 @Component({
   selector: 'app-workspace',
-  template: '<canvas #canvas (click)="onClick($event)"></canvas>',
+  template: '<canvas #canvas (click)="onClick($event)" (dblclick)="onRightClick($event)"></canvas>',
   //styles: ['canvas { border: 1px solid #000; }']
 })
 export class WorkspaceComponent implements AfterViewInit {
@@ -14,7 +15,7 @@ export class WorkspaceComponent implements AfterViewInit {
   private context: CanvasRenderingContext2D;
   private pos;
 
-  constructor() { }
+  constructor(toolSelector: ToolSelectorService) { }
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -62,6 +63,14 @@ export class WorkspaceComponent implements AfterViewInit {
     this.updateBlock(x,y);
   }
 
+  private onRightClick(event){
+    let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
+    let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
+
+    console.log(x + "," + y);
+    this.clearBlock(x,y);
+  }
+
   private updateBlock(x: number,y: number): void{
     let xcoord = (30 * (x - 1));
     let ycoord = (30 * (y - 1));
@@ -74,4 +83,16 @@ export class WorkspaceComponent implements AfterViewInit {
     context.fill();
   }
   
+  private clearBlock(x: number,y: number): void{
+    let xcoord = (30 * (x - 1));
+    let ycoord = (30 * (y - 1));
+
+    let context = this.context;
+
+    context.beginPath();
+    context.rect(xcoord+1,ycoord+1,29,29);
+    context.fillStyle = "white";
+    context.fill();
+  }
+
 }

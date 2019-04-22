@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToolSelectorService } from '../tool-selector.service';
 
 @Component({
   selector: 'app-toolbox',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolboxComponent implements OnInit {
 
-  constructor() { }
+
+  constructor() {}
 
   ngOnInit() {
   }
