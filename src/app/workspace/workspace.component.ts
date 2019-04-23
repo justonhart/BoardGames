@@ -15,7 +15,7 @@ export class WorkspaceComponent implements AfterViewInit {
   private context: CanvasRenderingContext2D;
   private pos;
 
-  constructor(toolSelector: ToolSelectorService) { }
+  constructor(private toolSelector: ToolSelectorService) { }
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -79,7 +79,7 @@ export class WorkspaceComponent implements AfterViewInit {
 
     context.beginPath();
     context.rect(xcoord+1,ycoord+1,29,29);
-    context.fillStyle = "red";
+    context.fillStyle = this.toolSelector.getTool();
     context.fill();
   }
   

@@ -9,9 +9,14 @@ import { ToolSelectorService } from '../tool-selector.service';
 export class ToolboxComponent implements OnInit {
 
 
-  constructor() {}
+  constructor(private toolSelector: ToolSelectorService) {}
 
   ngOnInit() {
+    
+  }
+
+  choose(tool: string){
+    this.toolSelector.setTool(tool);
   }
 
 }
