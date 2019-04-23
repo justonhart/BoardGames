@@ -29,6 +29,7 @@ export class WorkspaceComponent implements AfterViewInit {
     this.pos = canvasEl.getBoundingClientRect();
   }
 
+  // 
   private createGrid() {
 
     var bw = 600;
