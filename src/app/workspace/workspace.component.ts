@@ -17,6 +17,7 @@ export class WorkspaceComponent implements AfterViewInit {
 
   constructor(private toolSelector: ToolSelectorService) { }
 
+  //Once the view initializes, create the workspace grid
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.context = canvasEl.getContext('2d');
@@ -29,42 +30,55 @@ export class WorkspaceComponent implements AfterViewInit {
     this.pos = canvasEl.getBoundingClientRect();
   }
 
-  // 
+  //this method creates the grid
   private createGrid() {
 
-    var bw = 600;
-    // Box height
-    var bh = 600;
-    // Padding
-    var p = 0;
+    //pixel size of grid
+    var width = 600;
+    var height = 600;
+    var padding = 0;
 
+    //set the context for drawing
     var context = this.context;
 
-    for (var x = 0; x <= bw; x += 30) {
-      context.moveTo(0.5 + x + p, p);
-      context.lineTo(0.5 + x + p, bh + p);
+    //create the vertical lines for grid
+    for (var x = 0; x <= width; x += 30) {
+      context.moveTo(0.5 + x + padding, padding);
+      context.lineTo(0.5 + x + padding, height + padding);
     }
 
-    for (var y = 0; y <= bh; y += 30) {
-      context.moveTo(p, 0.5 + y + p);
-      context.lineTo(bw + p, 0.5 + y + p);
+    // create the horizontal lines for grid
+    for (var y = 0; y <= height; y += 30) {
+      context.moveTo(padding, 0.5 + y + padding);
+      context.lineTo(width + padding, 0.5 + y + padding);
     }
 
+    //fills in the corner pixel
     context.moveTo(600,600);
     context.lineTo(601,601);
+
+    //draw lines
     context.strokeStyle = "black";
     context.stroke();
   }
 
+  //this is called by mouseclicks on the grid canvas, and calculates which block needs to be updated
   private onClick(event){
+
+    //this gross formula converts mouse coordinates to grid location
     let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
     let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
 
     console.log(x + "," + y);
+
+    //this passes the coordinate to the function that draws
     this.updateBlock(x,y);
   }
 
+
   private onRightClick(event){
+
+    //this gross formula converts mouse coordinates to grid location
     let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
     let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
 
@@ -72,6 +86,7 @@ export class WorkspaceComponent implements AfterViewInit {
     this.clearBlock(x,y);
   }
 
+  //draw over the grid square according to selected tool
   private updateBlock(x: number,y: number): void{
     let xcoord = (30 * (x - 1));
     let ycoord = (30 * (y - 1));
@@ -84,6 +99,7 @@ export class WorkspaceComponent implements AfterViewInit {
     context.fill();
   }
   
+  //redraw white over the grid square
   private clearBlock(x: number,y: number): void{
     let xcoord = (30 * (x - 1));
     let ycoord = (30 * (y - 1));

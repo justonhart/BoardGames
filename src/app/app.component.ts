@@ -11,6 +11,7 @@ export class AppComponent {
 
   constructor(private toolSelector: ToolSelectorService){}
 
+  //this listens for keypresses and selects tools based on which key is pressed
   @HostListener('document:keypress',['$event'])
   handleKeyboardEvent(event: KeyboardEvent){
     switch(event.key){
