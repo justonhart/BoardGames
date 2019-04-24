@@ -10,8 +10,12 @@ export class WorkspaceComponent implements AfterViewInit {
 
   @ViewChild('canvas') public canvas: ElementRef;
 
-  @Input() public width: number = 601;
+
+  //divide these values by 30 to get the size of the grid in blocks
+  @Input() public width: number = 901;
   @Input() public height: number = 601;
+
+
   private context: CanvasRenderingContext2D;
   private pos;
 
@@ -34,8 +38,8 @@ export class WorkspaceComponent implements AfterViewInit {
   private createGrid() {
 
     //pixel size of grid
-    var width = 600;
-    var height = 600;
+    var width = this.width - 1;
+    var height = this.height - 1;
     var padding = 0;
 
     //set the context for drawing
@@ -54,8 +58,8 @@ export class WorkspaceComponent implements AfterViewInit {
     }
 
     //fills in the corner pixel
-    context.moveTo(600,600);
-    context.lineTo(601,601);
+    context.moveTo(this.width-1,this.height-1);
+    context.lineTo(this.width,this.height);
 
     //draw lines
     context.strokeStyle = "black";
