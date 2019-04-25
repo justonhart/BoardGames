@@ -1,12 +1,12 @@
 /*The ToolSelectorService is what connects the toolbox selection to the workspace; grid graphics are created using the tool value selected in this service */
-
+//defaults to redstone
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToolSelectorService {
-  tool: string;
+  tool: string = 'red';
   constructor() { }
 
   //this returns the tool value selected

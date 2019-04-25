@@ -75,7 +75,7 @@ export class WorkspaceComponent implements AfterViewInit {
 
     console.log(x + "," + y);
 
-    //this passes the coordinate to the function that draws
+    //this passes the coordinate to the function that draws; defaults to redstone
     this.updateBlock(x,y);
   }
 
