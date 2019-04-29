@@ -1,25 +1,24 @@
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { ToolSelectorService } from '../tool-selector.service';
+import { GridLogicService } from '../grid-logic.service';
 
 @Component({
   selector: 'app-workspace',
   template: '<canvas #canvas (click)="onClick($event)" (dblclick)="onRightClick($event)"></canvas>',
-  //styles: ['canvas { border: 1px solid #000; }']
+  providers: [GridLogicService]
 })
 export class WorkspaceComponent implements AfterViewInit {
 
   @ViewChild('canvas') public canvas: ElementRef;
 
-
   //divide these values by 30 to get the size of the grid in blocks
   @Input() public width: number = 901;
   @Input() public height: number = 601;
 
-
   private context: CanvasRenderingContext2D;
   private pos;
 
-  constructor(private toolSelector: ToolSelectorService) { }
+  constructor(private toolSelector: ToolSelectorService, private gridLogic: GridLogicService) { }
 
   //Once the view initializes, create the workspace grid
   public ngAfterViewInit() {
@@ -40,21 +39,20 @@ export class WorkspaceComponent implements AfterViewInit {
     //pixel size of grid
     var width = this.width - 1;
     var height = this.height - 1;
-    var padding = 0;
 
     //set the context for drawing
     var context = this.context;
 
     //create the vertical lines for grid
     for (var x = 0; x <= width; x += 30) {
-      context.moveTo(0.5 + x + padding, padding);
-      context.lineTo(0.5 + x + padding, height + padding);
+      context.moveTo(0.5 + x, 0);
+      context.lineTo(0.5 + x, height);
     }
 
     // create the horizontal lines for grid
     for (var y = 0; y <= height; y += 30) {
-      context.moveTo(padding, 0.5 + y + padding);
-      context.lineTo(width + padding, 0.5 + y + padding);
+      context.moveTo(0, 0.5 + y);
+      context.lineTo(width, 0.5 + y);
     }
 
     //fills in the corner pixel
@@ -73,10 +71,11 @@ export class WorkspaceComponent implements AfterViewInit {
     let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
     let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
 
-    console.log(x + "," + y);
-
     //this passes the coordinate to the function that draws; defaults to redstone
-    this.updateBlock(x,y);
+    this.updateBlockGraphics(x,y);
+    
+    //this passes the changes to the logic handler
+    this.gridLogic.updateGrid(x,y,this.toolSelector.getTool())
   }
 
 
@@ -91,7 +90,7 @@ export class WorkspaceComponent implements AfterViewInit {
   }
 
   //draw over the grid square according to selected tool
-  private updateBlock(x: number,y: number): void{
+  private updateBlockGraphics(x: number,y: number): void{
     let xcoord = (30 * (x - 1));
     let ycoord = (30 * (y - 1));
 
@@ -102,7 +101,7 @@ export class WorkspaceComponent implements AfterViewInit {
     context.fillStyle = this.toolSelector.getTool();
     context.fill();
   }
-  
+
   //redraw white over the grid square
   private clearBlock(x: number,y: number): void{
     let xcoord = (30 * (x - 1));
@@ -115,5 +114,4 @@ export class WorkspaceComponent implements AfterViewInit {
     context.fillStyle = "white";
     context.fill();
   }
-
 }
