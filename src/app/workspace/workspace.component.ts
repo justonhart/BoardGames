@@ -4,7 +4,7 @@ import { GridLogicService } from '../grid-logic.service';
 
 @Component({
   selector: 'app-workspace',
-  template: '<canvas #canvas (click)="onClick($event)" (dblclick)="onRightClick($event)"></canvas>',
+  template: '<canvas #canvas (click)="onClick($event)" (dblclick)="onDoubleClick($event)"></canvas>',
   providers: [GridLogicService]
 })
 export class WorkspaceComponent implements AfterViewInit {
@@ -79,14 +79,16 @@ export class WorkspaceComponent implements AfterViewInit {
   }
 
 
-  private onRightClick(event){
+  private onDoubleClick(event){
 
     //this gross formula converts mouse coordinates to grid location
     let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
     let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
 
     console.log(x + "," + y);
-    this.clearBlock(x,y);
+
+    this.gridLogic.updateGrid(x,y,"empty");
+    this.clearBlockGraphics(x,y);
   }
 
   //draw over the grid square according to selected tool
@@ -103,7 +105,7 @@ export class WorkspaceComponent implements AfterViewInit {
   }
 
   //redraw white over the grid square
-  private clearBlock(x: number,y: number): void{
+  private clearBlockGraphics(x: number,y: number): void{
     let xcoord = (30 * (x - 1));
     let ycoord = (30 * (y - 1));
 
