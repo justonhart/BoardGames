@@ -16,7 +16,6 @@ export class WorkspaceComponent implements AfterViewInit {
   @Input() public height: number = 601;
 
   private context: CanvasRenderingContext2D;
-  private pos;
 
   constructor(private toolSelector: ToolSelectorService, private gridLogic: GridLogicService) { }
 
@@ -29,8 +28,6 @@ export class WorkspaceComponent implements AfterViewInit {
     canvasEl.height = this.height;
 
     this.createGrid();
-
-    this.pos = canvasEl.getBoundingClientRect();
   }
 
   //this method creates the grid
@@ -67,9 +64,10 @@ export class WorkspaceComponent implements AfterViewInit {
   //this is called by mouseclicks on the grid canvas, and calculates which block needs to be updated
   private onClick(event){
 
+    var rect = event.target.getBoundingClientRect();
     //this gross formula converts mouse coordinates to grid location
-    let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
-    let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
+    let x = (-1* Math.ceil((rect.left - event.pageX)/30) +1);
+    let y = (-1 * Math.ceil((rect.top - event.pageY)/30) +1);
 
     //this passes the coordinate to the function that draws; defaults to redstone
     this.updateBlockGraphics(x,y);
@@ -81,9 +79,10 @@ export class WorkspaceComponent implements AfterViewInit {
 
   private onDoubleClick(event){
 
+    var rect = event.target.getBoundingClientRect();
     //this gross formula converts mouse coordinates to grid location
-    let x = (-1* Math.ceil((this.pos.left - event.clientX)/30) +1);
-    let y = (-1 * Math.ceil((this.pos.top - event.clientY)/30) +1);
+    let x = (-1* Math.ceil((rect.left - event.pageX)/30) +1);
+    let y = (-1 * Math.ceil((rect.top - event.pageY)/30) +1);
 
     console.log(x + "," + y);
 
