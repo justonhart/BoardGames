@@ -69,11 +69,9 @@ export class WorkspaceComponent implements AfterViewInit {
     let x = (-1* Math.ceil((rect.left - event.pageX)/30) +1);
     let y = (-1 * Math.ceil((rect.top - event.pageY)/30) +1);
 
-    //this passes the coordinate to the function that draws; defaults to redstone
-    this.updateBlockGraphics(x,y);
-    
     //this passes the changes to the logic handler
     this.gridLogic.updateGrid(x,y,this.toolSelector.getTool())
+    this.updateBlockGraphics(x,y);
   }
 
 
@@ -87,7 +85,7 @@ export class WorkspaceComponent implements AfterViewInit {
     console.log(x + "," + y);
 
     this.gridLogic.updateGrid(x,y,"empty");
-    this.clearBlockGraphics(x,y);
+    this.updateBlockGraphics(x,y);
   }
 
   //draw over the grid square according to selected tool
@@ -99,20 +97,15 @@ export class WorkspaceComponent implements AfterViewInit {
 
     context.beginPath();
     context.rect(xcoord+1,ycoord+1,29,29);
-    context.fillStyle = this.toolSelector.getTool();
+
+    context.fillStyle = this.parseType(this.gridLogic.getValue(x,y));
+
     context.fill();
   }
 
-  //redraw white over the grid square
-  private clearBlockGraphics(x: number,y: number): void{
-    let xcoord = (30 * (x - 1));
-    let ycoord = (30 * (y - 1));
-
-    let context = this.context;
-
-    context.beginPath();
-    context.rect(xcoord+1,ycoord+1,29,29);
-    context.fillStyle = "white";
-    context.fill();
+  private parseType(s: string){
+    if(s == "empty")
+      return "white";
+    return s;
   }
 }

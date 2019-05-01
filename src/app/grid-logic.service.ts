@@ -27,4 +27,8 @@ export class GridLogicService {
     this.grid[x-1][y-1] = value;
     console.log(x + "," + y + " updated to " + this.grid[x-1][y-1]);
   }
+
+  public getValue(x: number, y: number){
+    return this.grid[x-1][y-1];
+  }
 }
