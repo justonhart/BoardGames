@@ -7,8 +7,8 @@ export class GridLogicService {
   private grid: string[][];
 
   //these values are currently defined; they will at some point be dynamic
-  private width: number = 30;
-  private height: number = 20;
+  public width: number = 8;
+  public height: number = 8;
 
   constructor() { 
     console.log("Grid logic service constructed");
@@ -21,7 +21,7 @@ export class GridLogicService {
     for(let i: number  = 0; i < this.width; i++){
       this.grid[i] = [];
       for(let j: number = 0; j < this.height; j++){
-        this.grid[i][j] = 'white';
+        this.grid[i][j] = 'green';
       }
     }
   }
@@ -29,23 +29,82 @@ export class GridLogicService {
   //this function takes input from the workspace to update the grid
   public updateGrid(x: number, y:number, value: string){
     this.grid[x][y] = value;
-    console.log(x + "," + y + " updated to " + this.grid[x][y]);
+    console.log(this.grid[x][y]);
+    this.checkAxes(x,y,value);
 
-    //for testing purposes, blue should turn neighboring red blocks to blue. I want to make all of the changes appear after the click happens
-    if(value == "blue"){
-      if(x > 0 && this.getValue(x-1,y) == "red")
-        this.updateGrid(x-1,y, "blue");
-      if(x< this.width - 1 && this.getValue(x+1,y) == "red")
-        this.updateGrid(x+1,y,"blue");
-      if(y > 0 && this.getValue(x,y-1) == "red")
-        this.updateGrid(x,y-1,"blue");
-      if(y < this.height - 1 && this.getValue(x,y+1) == "red")
-        this.updateGrid(x,y+1,"blue");
-    }
   }
 
   //returns value of selected grid coordinate
   public getValue(x: number, y: number){
     return this.grid[x][y];
   }
+
+  private checkAxes(x: number, y: number, value: string){
+    this.checkAbove(x,y,value);
+    this.checkBelow(x,y,value);
+    this.checkLeft(x,y,value);
+    this.checkRight(x,y,value);
+  }
+
+  private checkAbove(x: number, y: number, value: string){
+
+    let t: boolean = false;
+
+    for(let i = 0; i < y; i++){
+      if(t)
+        this.grid[x][i] = value;
+      else if(this.grid[x][i] == value && !t){
+        t = true;
+      }
+    }
+  }
+
+  private checkBelow(x:number, y: number, value: string){
+    let t: boolean = false;
+
+    for(let i = this.height-1; i > y; i--){
+      if(t)
+        this.grid[x][i] = value;
+      else if(this.grid[x][i] == value && !t){
+        t = true;
+      }
+    }
+  }
+
+  private checkLeft(x:number, y:number, value:string){
+    let t: boolean = false;
+
+    for(let i = 0; i < x; i++){
+      if(t)
+        this.grid[i][y] = value;
+      else if(this.grid[i][y] == value && !t){
+        t = true;
+      }
+    }
+  }
+
+  private checkRight(x: number, y:number, value:string){
+    let t: boolean = false;
+
+    for(let i = this.width-1; i > x; i--){
+      if(t)
+        this.grid[i][y] = value;
+      else if(this.grid[i][y] == value && !t){
+        t = true;
+      }
+    }
+  }
+
+  private checkTopRight(x: number, y: number, value:string){
+    let t: boolean = false;
+
+    for(let i = this.width-1; i > x; i--){
+      if(t)
+        this.grid[i][y] = value;
+      else if(this.grid[i][y] == value && !t){
+        t = true;
+      }
+    }
+  }
+
 }

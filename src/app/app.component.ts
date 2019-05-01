@@ -7,17 +7,7 @@ import {ToolSelectorService} from './tool-selector.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'redsim';
+  title = 'Board Games';
 
   constructor(private toolSelector: ToolSelectorService){}
-
-  //this listens for keypresses and selects tools based on which key is pressed
-  @HostListener('document:keypress',['$event'])
-  handleKeyboardEvent(event: KeyboardEvent){
-    switch(event.key){
-      case 'r':
-        this.toolSelector.setTool('red');
-        break;
-    }
-  }
 }

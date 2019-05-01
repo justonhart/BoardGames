@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ToolSelectorService {
-  private tool: string = 'red';
+  private tool: string = 'black';
   constructor() { }
 
   //this returns the tool value selected
@@ -17,5 +17,12 @@ export class ToolSelectorService {
   //this allows the toolbox/HostListener to set the tool
   public setTool(selection){
     this.tool = selection;
+  }
+
+  public toggle(){
+    if(this.tool == "black")
+      this.tool = "white";
+    else
+      this.tool = "black";
   }
 }
