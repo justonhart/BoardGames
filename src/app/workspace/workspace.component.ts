@@ -15,6 +15,9 @@ export class WorkspaceComponent implements AfterViewInit {
   @Input() public width: number = 901;
   @Input() public height: number = 601;
 
+  private cellWidth = (this.width - 1) / 30;
+  private cellHeight = (this.height - 1) / 30;
+
   private context: CanvasRenderingContext2D;
 
   constructor(private toolSelector: ToolSelectorService, private gridLogic: GridLogicService) { }
@@ -66,12 +69,13 @@ export class WorkspaceComponent implements AfterViewInit {
 
     var rect = event.target.getBoundingClientRect();
     //this gross formula converts mouse coordinates to grid location
-    let x = (-1* Math.ceil((rect.left - event.pageX)/30) +1);
-    let y = (-1 * Math.ceil((rect.top - event.pageY)/30) +1);
+    let x = (-1* Math.ceil((rect.left - event.pageX)/30));
+    let y = (-1 * Math.ceil((rect.top - event.pageY)/30));
 
     //this passes the changes to the logic handler
     this.gridLogic.updateGrid(x,y,this.toolSelector.getTool())
-    this.updateBlockGraphics(x,y);
+    //this.updateCellGraphics(x,y);
+    this.updateGridGraphics();
   }
 
 
@@ -79,19 +83,19 @@ export class WorkspaceComponent implements AfterViewInit {
 
     var rect = event.target.getBoundingClientRect();
     //this gross formula converts mouse coordinates to grid location
-    let x = (-1* Math.ceil((rect.left - event.pageX)/30) +1);
-    let y = (-1 * Math.ceil((rect.top - event.pageY)/30) +1);
+    let x = (-1* Math.ceil((rect.left - event.pageX)/30));
+    let y = (-1 * Math.ceil((rect.top - event.pageY)/30));
 
     console.log(x + "," + y);
 
     this.gridLogic.updateGrid(x,y,"empty");
-    this.updateBlockGraphics(x,y);
+    this.updateCellGraphics(x,y);
   }
 
   //draw over the grid square according to selected tool
-  private updateBlockGraphics(x: number,y: number): void{
-    let xcoord = (30 * (x - 1));
-    let ycoord = (30 * (y - 1));
+  private updateCellGraphics(x: number,y: number){
+    let xcoord = (30 * (x));
+    let ycoord = (30 * (y));
 
     let context = this.context;
 
@@ -101,6 +105,14 @@ export class WorkspaceComponent implements AfterViewInit {
     context.fillStyle = this.parseType(this.gridLogic.getValue(x,y));
 
     context.fill();
+  }
+
+  private updateGridGraphics(){
+    for(let x = 0; x < this.cellWidth; x++){
+      for(let y = 0; y < this.cellHeight; y++){
+        this.updateCellGraphics(x,y);
+      }
+    }
   }
 
   private parseType(s: string){
