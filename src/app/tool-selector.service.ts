@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ToolSelectorService {
-  private tool: string = 'black';
+  private tool: string = 'white';
   constructor() { }
 
   //this returns the tool value selected

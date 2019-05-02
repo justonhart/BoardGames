@@ -1,14 +1,14 @@
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { ToolSelectorService } from '../tool-selector.service';
-import { GridLogicService } from '../grid-logic.service';
+import { ReversiLogicService } from '../reversi-logic.service';
 
 @Component({
-  selector: 'app-workspace',
-  template: '<canvas #canvas (click)="onClick($event)" (dblclick)="onDoubleClick($event)"></canvas>',
-  providers: [GridLogicService],
-  styleUrls: ['./workspace.component.css']
+  selector: 'app-gameboard',
+  templateUrl: './gameboard.component.html',
+  providers: [ReversiLogicService],
+  styleUrls: ['./gameboard.component.css']
 })
-export class WorkspaceComponent implements AfterViewInit {
+export class GameboardComponent implements AfterViewInit {
 
   @ViewChild('canvas') public canvas: ElementRef;
 
@@ -25,10 +25,11 @@ export class WorkspaceComponent implements AfterViewInit {
   private gridPixelHeight: number = (this.cellPixelHeight * this.gridCellHeight) + 1;
   
   private padding = 12;
+  private turn;
 
   private context: CanvasRenderingContext2D;
 
-  constructor(private toolSelector: ToolSelectorService, private gridLogic: GridLogicService) { }
+  constructor(private toolSelector: ToolSelectorService, private reversiLogic: ReversiLogicService) { }
 
   //Once the view initializes, create the workspace grid
   public ngAfterViewInit() {
@@ -39,6 +40,7 @@ export class WorkspaceComponent implements AfterViewInit {
     canvasEl.height = this.gridPixelHeight;
 
     this.createGrid();
+    this.updateGridGraphics();
   }
 
   //this method creates the grid
@@ -51,6 +53,7 @@ export class WorkspaceComponent implements AfterViewInit {
     //set the context for drawing
     var context = this.context;
 
+    //draw background
     context.moveTo(0,0);
     context.rect(0,0,this.gridPixelWidth,this.gridPixelHeight);
     context.fillStyle = "green";
@@ -86,14 +89,8 @@ export class WorkspaceComponent implements AfterViewInit {
     let y = (-1 * Math.ceil((rect.top - event.pageY + this.padding)/this.cellPixelHeight));
 
 
-    if(this.gridLogic.getValue(x,y) == "green"){
-      //this passes the changes to the logic handler
-      this.gridLogic.updateGrid(x,y,this.toolSelector.getTool())
-      //this.updateCellGraphics(x,y);
-      this.updateGridGraphics();
-
-      this.toolSelector.toggle();
-    }
+    this.reversiLogic.input(x,y);
+    this.updateGridGraphics();
   }
 
   //draw over the grid square according to selected tool
@@ -106,7 +103,7 @@ export class WorkspaceComponent implements AfterViewInit {
     context.beginPath();
     context.rect(xcoord+3,ycoord+3,this.cellPixelWidth-5,this.cellPixelHeight-5);
 
-    context.fillStyle = this.gridLogic.getValue(x,y);
+    context.fillStyle = this.reversiLogic.getValue(x,y);
 
     context.fill();
   }
@@ -114,8 +111,16 @@ export class WorkspaceComponent implements AfterViewInit {
   private updateGridGraphics(){
     for(let x = 0; x < this.gridCellWidth; x++){
       for(let y = 0; y < this.gridCellHeight; y++){
-        this.updateCellGraphics(x,y);
+        if(this.reversiLogic.getValue(x,y) !== undefined)
+          this.updateCellGraphics(x,y);
       }
     }
+
+    this.turn = this.reversiLogic.getTurn();
+  }
+
+  private pass(){
+    this.reversiLogic.toggleTurn();
+    this.turn = this.reversiLogic.getTurn();
   }
 }

@@ -3,7 +3,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 
 
 mat-toolbar{
-    background: rgb(165, 0, 0);
+    background: rgb(0, 0, 0);
     color: white;
 }
 
