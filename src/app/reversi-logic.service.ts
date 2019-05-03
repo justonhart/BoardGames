@@ -116,7 +116,9 @@ export class ReversiLogicService {
   }
 
   private checkLeft(x: number, y:number): boolean{
-    for(let i = 0; i < x-1; i++){
+    for(let i = x-2; i >= 0; i--){
+      if(this.grid[i][y] === undefined)
+        return false;
       if(this.grid[i][y] == this.turn && this.grid[x-1][y] == this.opponent())
         return true;
     }
@@ -126,6 +128,8 @@ export class ReversiLogicService {
 
   private checkRight(x: number, y:number): boolean{
     for(let i = x+2; i < this.width; i++){
+      if(this.grid[i][y] === undefined)
+        return false;
       if(this.grid[i][y] == this.turn && this.grid[x+1][y] == this.opponent())
         return true;
     }
@@ -135,7 +139,9 @@ export class ReversiLogicService {
 
   private checkUp(x: number, y: number): boolean{
     //check up
-    for(let i = 0; i < y-1; i++){
+    for(let i = y-2; i >= 0; i--){
+      if(this.grid[x][i] === undefined)
+        return false;
       if(this.grid[x][i] == this.turn && this.grid[x][y-1] == this.opponent())
         return true;
     }
@@ -145,6 +151,8 @@ export class ReversiLogicService {
 
   private checkDown(x: number, y: number): boolean{
     for(let i = y+2; i < this.height; i++){
+      if(this.grid[x][i] === undefined)
+        return false;
       if(this.grid[x][i] == this.turn && this.grid[x][y+1] == this.opponent())
         return true;
     }
@@ -155,6 +163,8 @@ export class ReversiLogicService {
   private checkTopLeft(x:number, y: number): boolean{
     let maxDistance = Math.min(x, y);
     for(let i = 2; i <= maxDistance; i++){
+      if(this.grid[x-i][y-i] === undefined)
+        return false;
       if(this.grid[x-i][y-i] == this.turn && this.grid[x-1][y-1] == this.opponent())
         return true;
     }
@@ -165,6 +175,8 @@ export class ReversiLogicService {
   private checkTopRight(x: number, y: number): boolean{
     let maxDistance = Math.min(this.width -1 - x, y);
     for(let i = 2; i <= maxDistance; i++){
+      if(this.grid[x+i][y-i] === undefined)
+        return false;
       if(this.grid[x+i][y-i] == this.turn && this.grid[x+1][y-1] == this.opponent())
         return true;
     }
@@ -175,6 +187,8 @@ export class ReversiLogicService {
   private checkBottomRight(x: number, y: number): boolean{
     let maxDistance = Math.min(this.width -1 - x, this.height -1 -y);
     for(let i = 2; i <= maxDistance; i++){
+      if(this.grid[x+i][y+i] === undefined)
+        return false;
       if(this.grid[x+i][y+i] == this.turn && this.grid[x+1][y+1] == this.opponent())
         return true;
     }
@@ -185,6 +199,8 @@ export class ReversiLogicService {
   private checkBottomLeft(x: number, y: number): boolean{
     let maxDistance = Math.min(x, this.height -1 -y);
     for(let i = 2; i <= maxDistance; i++){
+      if(this.grid[x-i][y+i] === undefined)
+        return false;
       if(this.grid[x-i][y+i] == this.turn && this.grid[x-1][y+1] == this.opponent())
         return true;
     }

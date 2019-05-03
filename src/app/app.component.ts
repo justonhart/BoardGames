@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import {ToolSelectorService} from './tool-selector.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +9,7 @@ import {ToolSelectorService} from './tool-selector.service';
 export class AppComponent {
   title = 'Board Games';
 
-  constructor(private toolSelector: ToolSelectorService){}
+  constructor(private titleService: Title){
+    this.titleService.setTitle("Reversi");
+  }
 }
