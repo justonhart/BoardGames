@@ -1,6 +1,5 @@
 /**this will contain all the logic for interaction between grid components */
 import { Injectable } from '@angular/core';
-import { isDefined } from '@angular/compiler/src/util';
 
 @Injectable()
 export class ReversiLogicService {
@@ -9,8 +8,11 @@ export class ReversiLogicService {
   private turn: string;
 
   //these values are currently defined; they will at some point be dynamic
-  public width: number = 8;
-  public height: number = 8;
+  private width: number = 8;
+  private height: number = 8;
+
+  private blackScore = 2;
+  private whiteScore = 2;
 
   constructor() { 
     this.initGrid();
@@ -34,11 +36,24 @@ export class ReversiLogicService {
   }
 
   //this function takes input from the workspace to update the grid
-  public updateGrid(x: number, y:number, value: string){
-    this.grid[x][y] = value;
+  public updateGrid(x: number, y:number){
+    this.grid[x][y] = this.turn;
 
-    this.updateAxes(x,y)
+    if(this.turn == "black")
+      this.blackScore++;
+    else
+      this.whiteScore++;
+  }
 
+  private capture(){
+    if(this.turn == "black"){
+      this.blackScore++;
+      this.whiteScore--;
+    }
+    else{
+      this.whiteScore++;
+      this.blackScore--;
+    }
   }
 
   //returns value of selected grid coordinate
@@ -51,6 +66,7 @@ export class ReversiLogicService {
     if(this.checkRight(x,y)){
       for(let i = x+1; i < this.width && this.grid[i][y] == this.opponent(); i++){
         this.grid[i][y] = this.turn;
+        this.capture();
       }
     }
 
@@ -58,6 +74,7 @@ export class ReversiLogicService {
     if(this.checkUp(x,y)){
       for(let i = y-1; i > 0 && this.grid[x][i] == this.opponent(); i--){
         this.grid[x][i] = this.turn;
+        this.capture();
       }
     }
 
@@ -65,6 +82,7 @@ export class ReversiLogicService {
     if(this.checkLeft(x,y)){
       for(let i = x-1; i > 0 && this.grid[i][y] == this.opponent(); i--){
         this.grid[i][y] = this.turn;
+        this.capture();
       }
     }
 
@@ -72,6 +90,7 @@ export class ReversiLogicService {
     if(this.checkDown(x,y)){
       for(let i = y+1; i < this.height && this.grid[x][i] == this.opponent(); i++){
         this.grid[x][i] = this.turn;
+        this.capture();
       }
     }
 
@@ -80,6 +99,7 @@ export class ReversiLogicService {
       let maxDistance = Math.min(this.width -1 - x, y);
       for(let i = 1; i <= maxDistance && this.grid[x+i][y-i] == this.opponent(); i++){
         this.grid[x+i][y-i] = this.turn;
+        this.capture();
       }
     }
 
@@ -88,6 +108,7 @@ export class ReversiLogicService {
       let maxDistance = Math.min(x, y);
       for(let i = 1; i <= maxDistance && this.grid[x-i][y-i] == this.opponent(); i++){
         this.grid[x-i][y-i] = this.turn;
+        this.capture();
       }
     }
 
@@ -96,6 +117,7 @@ export class ReversiLogicService {
       let maxDistance = Math.min(x, this.height -1 -y);
       for(let i = 1; i <= maxDistance && this.grid[x-i][y+i] == this.opponent(); i++){
         this.grid[x-i][y+i] = this.turn;
+        this.capture();
       }
     }
 
@@ -104,6 +126,7 @@ export class ReversiLogicService {
       let maxDistance = Math.min(this.width -1 - x, this.width -1 -y);
       for(let i = 1; i <= maxDistance && this.grid[x+i][y+i] == this.opponent(); i++){
         this.grid[x+i][y+i] = this.turn;
+        this.capture();
       }
     }
   }
@@ -210,7 +233,8 @@ export class ReversiLogicService {
 
   public input(x: number, y: number){
     if(this.grid[x][y] == undefined && this.checkAxes(x,y)){
-      this.updateGrid(x,y,this.turn);
+      this.updateGrid(x,y);
+      this.updateAxes(x,y);
       this.toggleTurn();
     }
   }
@@ -237,4 +261,10 @@ export class ReversiLogicService {
     return this.turn;
   }
 
+  public printScores(){
+    console.log ("Black: " + this.blackScore + "\nWhite: " + this.whiteScore);
+
+    if(this.blackScore + this.whiteScore == 64)
+      alert("Black: " + this.blackScore + "\nWhite: " + this.whiteScore);
+  }
 }

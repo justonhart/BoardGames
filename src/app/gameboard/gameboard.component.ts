@@ -91,6 +91,7 @@ export class GameboardComponent implements AfterViewInit {
 
     this.reversiLogic.input(x,y);
     this.updateGridGraphics();
+    this.reversiLogic.printScores();
   }
 
   //draw over the grid square according to selected tool
