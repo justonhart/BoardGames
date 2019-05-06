@@ -25,7 +25,7 @@ export class GameboardComponent implements AfterViewInit {
   private gridPixelHeight: number = (this.cellPixelHeight * this.gridCellHeight) + 1;
   
   private padding = 12;
-  private turn;
+  private turn = "black";
 
   private context: CanvasRenderingContext2D;
 
