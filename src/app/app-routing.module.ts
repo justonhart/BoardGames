@@ -1,9 +1,9 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GameboardComponent } from './gameboard/gameboard.component';
+import { ReversiComponent } from './reversi/reversi.component';
 
 const routes: Routes = [
-  {path: 'gameboard', component: GameboardComponent}
+  {path: 'reversi', component: ReversiComponent}
 ]
 
 @NgModule({
