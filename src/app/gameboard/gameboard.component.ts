@@ -1,5 +1,4 @@
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
-import { ToolSelectorService } from '../tool-selector.service';
 import { ReversiLogicService } from '../reversi-logic.service';
 
 @Component({
@@ -29,7 +28,7 @@ export class GameboardComponent implements AfterViewInit {
 
   private context: CanvasRenderingContext2D;
 
-  constructor(private toolSelector: ToolSelectorService, private reversiLogic: ReversiLogicService) { }
+  constructor(private reversiLogic: ReversiLogicService) { }
 
   //Once the view initializes, create the workspace grid
   public ngAfterViewInit() {
