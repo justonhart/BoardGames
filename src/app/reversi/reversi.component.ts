@@ -100,7 +100,6 @@ export class ReversiComponent implements AfterViewInit {
 
 
     this.input(x,y);
-    this.updateGridGraphics();
     this.printScores();
   }
 
@@ -348,6 +347,7 @@ export class ReversiComponent implements AfterViewInit {
     if(this.checkLegality(x,y)){
       this.updateGrid(x,y);
       this.updateAxes(x,y);
+      this.updateGridGraphics();
       this.toggleTurn();
     }
   }
@@ -359,7 +359,7 @@ export class ReversiComponent implements AfterViewInit {
     else
       this.turn = "white";
 
-    this.countAvailableMoves();
+    setTimeout(() => {this.countAvailableMoves();}, 1500);
   }
 
   //returns the opponent relative to current turn
@@ -410,8 +410,9 @@ export class ReversiComponent implements AfterViewInit {
       }
     }
 
-    if(available === 0){
-      alert("No available moves. Passing turn");
+    if(available === 0 && this.blackScore + this.whiteScore < 64){
+      
+      alert(this.turn + " has no available moves. Passing turn");
       this.toggleTurn();
     }
     else{
