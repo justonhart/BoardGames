@@ -101,7 +101,6 @@ export class ReversiComponent implements AfterViewInit {
 
     this.input(x,y);
     this.updateGridGraphics();
-
     this.printScores();
   }
 
@@ -244,10 +243,10 @@ export class ReversiComponent implements AfterViewInit {
     }
   }
 
-  private checkAxes(x: number, y:number): boolean{
+  private checkLegality(x: number, y:number): boolean{
     
-    return this.checkLeft(x,y) || this.checkRight(x,y) || this.checkUp(x,y) || this.checkDown(x,y) || this.checkBottomLeft(x,y)
-      || this.checkBottomRight(x,y) || this.checkTopRight(x,y) || this.checkTopLeft(x,y);
+    return this.grid[x][y] == undefined && (this.checkLeft(x,y) || this.checkRight(x,y) || this.checkUp(x,y) || this.checkDown(x,y) || this.checkBottomLeft(x,y)
+      || this.checkBottomRight(x,y) || this.checkTopRight(x,y) || this.checkTopLeft(x,y));
 
   }
 
@@ -346,7 +345,7 @@ export class ReversiComponent implements AfterViewInit {
 
   //runs checks on the grid space clicked to determine if it is a legal move, and makes the move if so
   private input(x: number, y: number){
-    if(this.grid[x][y] == undefined && this.checkAxes(x,y)){
+    if(this.checkLegality(x,y)){
       this.updateGrid(x,y);
       this.updateAxes(x,y);
       this.toggleTurn();
@@ -359,6 +358,8 @@ export class ReversiComponent implements AfterViewInit {
       this.turn = "black";
     else
       this.turn = "white";
+
+    this.countAvailableMoves();
   }
 
   //returns the opponent relative to current turn
@@ -395,4 +396,28 @@ export class ReversiComponent implements AfterViewInit {
       }
     }
   }
+
+  //checks each space on the board for move legality, and prints the number of available moves to console. If none exist, alerts and passes turn
+  private countAvailableMoves(){
+
+    let available = 0;
+
+    for(let i = 0; i < 8; i++){
+      for(let j = 0; j < 8; j++){
+        if(this.checkLegality(i,j)){
+          available++;
+        }
+      }
+    }
+
+    if(available === 0){
+      alert("No available moves. Passing turn");
+      this.toggleTurn();
+    }
+    else{
+      console.log("Available moves: " + available);
+    }
+  }
+
+
 }
