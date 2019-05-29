@@ -1,0 +1,11 @@
+div{
+    text-align: center;
+}
+
+.e{
+    display: inline-block;
+    margin: auto;
+}
+canvas{
+    padding: 12px;
+}

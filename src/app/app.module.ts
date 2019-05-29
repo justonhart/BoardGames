@@ -6,11 +6,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppRoutingModule } from './app-routing.module';
 import { ReversiComponent } from './reversi/reversi.component';
+import { OnlineReversiComponent } from './online-reversi/online-reversi.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ReversiComponent,
+    OnlineReversiComponent,
   ],
   imports: [
     BrowserModule,
