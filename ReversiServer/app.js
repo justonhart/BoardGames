@@ -251,12 +251,18 @@ function updateGrid(x, y){
 
   //runs checks on the grid space clicked to determine if it is a legal move, and makes the move if so
   function input(x, y){
-    if(checkLegality(x,y)){
-      updateGrid(x,y);
-      updateAxes(x,y);
-      toggleTurn();
-      checkScore();
-      setTimeout(countAvailableMoves, 750);
+    
+    
+    try{
+        if(checkLegality(x,y)){
+        updateGrid(x,y);
+        updateAxes(x,y);
+        toggleTurn();
+        checkScore();
+        setTimeout(countAvailableMoves, 750);
+      }
+    }catch(e){
+      console.log(e);
     }
   }
 
