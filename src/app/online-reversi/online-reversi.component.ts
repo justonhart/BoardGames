@@ -58,7 +58,7 @@ export class OnlineReversiComponent implements OnInit {
     });
 
     this.socket.on("noMoves", function(){
-      alert("No moves available!\nPassing turn to ")
+      alert(this.turn + " has no moves available!\nPassing turn to " + this.opponent());
     })
 
     this.socket.on("end", winner=>{
@@ -182,5 +182,11 @@ export class OnlineReversiComponent implements OnInit {
 
   private reset(){
     this.socket.emit("reset");
+  }
+  
+  private opponent(){
+    if(this.turn != "white")
+      return "black";
+    return "white";
   }
 }
