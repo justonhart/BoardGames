@@ -42,7 +42,7 @@ export class OnlineReversiComponent implements OnInit {
 
   ngOnInit() {
     //connect the component to the reversi server
-    this.socket = io("http://localhost:3000");
+    this.socket = io("http://98.162.221.99:3000");
   }
 
   ngAfterViewInit(){
@@ -146,12 +146,12 @@ export class OnlineReversiComponent implements OnInit {
 
   private endGame(winner: string){
     switch(winner){
-      case "white":
+      case "black":
         setTimeout(()=>{
           alert("Black: " + this.blackScore + "\nWhite: " + this.whiteScore + "\n\n Black wins!");
         }, 250);
         break;
-      case "black":
+      case "white":
         setTimeout(()=>{
           alert("Black: " + this.blackScore + "\nWhite: " + this.whiteScore + "\n\n White wins!");
         }, 250);
