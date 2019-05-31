@@ -282,7 +282,8 @@ function updateGrid(x, y){
       }
     }
 
-    if(available === 0 && blackScore + whiteScore < 64){
+    console.log("Available moves: " + available);
+    if(available == 0 && blackScore + whiteScore < 64){
         Socketio.emit("noMoves");
         toggleTurn();
         sendData();
