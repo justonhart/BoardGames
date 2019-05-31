@@ -138,8 +138,8 @@ export class OnlineReversiComponent implements OnInit {
 
     var rect = event.target.getBoundingClientRect();
     //this gross formula converts mouse coordinates to grid location
-    let x = (-1* Math.ceil((rect.left - event.pageX + this.padding)/this.cellPixelWidth));
-    let y = (-1 * Math.ceil((rect.top - event.pageY + this.padding)/this.cellPixelHeight));
+    let x = (-1* Math.ceil((rect.left - event.clientX + this.padding)/this.cellPixelWidth));
+    let y = (-1 * Math.ceil((rect.top - event.clientY + this.padding)/this.cellPixelHeight));
 
     this.sendMove(x,y);
   }
