@@ -280,7 +280,6 @@ function input(x, y){
       updateGrid(x,y);
       updateAxes(x,y);
       toggleTurn();
-      checkScore();
       setTimeout(countAvailableMoves, 750);
     }
   }catch(e){
@@ -306,11 +305,44 @@ function countAvailableMoves(){
 
   console.log("Available moves: " + available);
   if(available == 0 && blackScore + whiteScore < 64){
-    io.emit("noMoves");
-    toggleTurn();
-    sendDataToUsers();
-      
+    checkMovesBase();
   }
+  else{
+    checkScore();
+  }
+}
+
+function checkMovesBase() {
+  
+  toggleTurn();
+
+  let available = 0;
+
+  for(let i = 0; i < WIDTH; i++){
+    for(let j = 0; j < HEIGHT; j++){
+      if(checkLegality(i,j)){
+        available++;
+      }
+    }
+  }
+
+  if(available == 0){
+    if(blackScore > whiteScore){
+      io.emit("end", "black");
+    }
+    else if(blackScore < whiteScore){
+      io.emit("end", "white");
+    }
+    else{
+      io.emit("end", "tie");
+    }
+  }
+  else{
+    io.emit("noMoves");
+    sendDataToUsers();
+  }
+
+
 }
 
 function sendDataToUsers(){

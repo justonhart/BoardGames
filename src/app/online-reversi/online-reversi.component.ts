@@ -174,7 +174,7 @@ export class OnlineReversiComponent implements OnInit {
   
   //get the opponent's color
   private opponent(){
-    if(this.turn != "white")
+    if(this.turn == "white")
       return "black";
     return "white";
   }
