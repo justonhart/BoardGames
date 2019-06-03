@@ -1,10 +1,20 @@
-<div>
-  Black Score: {{blackScore}}
-  &nbsp;&nbsp;White Score: {{whiteScore}}
-  &nbsp;&nbsp;Current turn: {{turn}}
-  <!-- <button class="e" (click)="toggleTurn()">Pass turn</button> -->
+<div [hidden]="!name">
+  <div>
+    Black Score: {{blackScore}}
+    &nbsp;&nbsp;White Score: {{whiteScore}}
+    &nbsp;&nbsp;Current turn: {{turn}}
+    <!-- <button class="e" (click)="toggleTurn()">Pass turn</button> -->
+  </div>
+  <div>
+    <canvas class="e" #canvas (click)="onClick($event)" ></canvas>
+  </div>
+  <div><button class="e" (click)="reset()">Reset</button></div>
 </div>
-<div>
-  <canvas class="e" #canvas (click)="onClick($event)" ></canvas>
+
+<div *ngIf="name==undefined">
+  <div>
+    <h2>Please enter your name:</h2><br>
+    <input #nameField type="text"><br>
+    <button class="e" (click)="start(nameField.value)">Submit</button>
+  </div>
 </div>
-<div><button class="e" (click)="reset()">Reset</button></div>

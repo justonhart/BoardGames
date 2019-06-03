@@ -36,38 +36,18 @@ export class OnlineReversiComponent implements OnInit {
   private whiteScore;
   private grid;
 
+  private name;
 
   constructor() {
   }
 
   ngOnInit() {
-    //connect the component to the reversi server
-    this.socket = io("http://98.162.221.99:3000");
   }
 
   ngAfterViewInit(){
-    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    this.context = canvasEl.getContext('2d');
-
-    canvasEl.width = this.gridPixelWidth;
-    canvasEl.height = this.gridPixelHeight;
-
-    this.socket.on("data", data=>{
-      this.parseSeverData(data);
-      this.updateGridGraphics();
-    });
-
-    this.socket.on("noMoves", function(){
-      alert(this.turn + " has no moves available!\nPassing turn to " + this.opponent());
-    })
-
-    this.socket.on("end", winner=>{
-      this.endGame(winner);
-    })
-
-    this.createGrid();
   }
 
+  //draw a blank gameboard
   private createGrid() {
 
     //pixel size of grid
@@ -144,6 +124,7 @@ export class OnlineReversiComponent implements OnInit {
     this.sendMove(x,y);
   }
 
+  //handle the endgame signal
   private endGame(winner: string){
     switch(winner){
       case "black":
@@ -164,10 +145,12 @@ export class OnlineReversiComponent implements OnInit {
     }
   }
 
+  //emit the move to the sever
   private sendMove(x: number, y: number){
     this.socket.emit("move", {x,y});
   }
 
+  //handle data received from server
   private parseSeverData(data: any){
     this.blackScore = data.blackScore;
     this.whiteScore = data.whiteScore;
@@ -180,13 +163,54 @@ export class OnlineReversiComponent implements OnInit {
     return this.grid[x][y];
   }
 
+  //reset the board state
   private reset(){
     this.socket.emit("reset");
   }
   
+  //get the opponent's color
   private opponent(){
     if(this.turn != "white")
       return "black";
     return "white";
+  }
+
+  //set name and start board
+  private start(name: string){
+    if(name){
+      this.name = name;
+      this.initBoard();
+      this.connectGame();
+    }
+  }
+
+  //connect the client to the reversi server and set socket handling
+  private connectGame(){
+    
+    //connect the component to the reversi server
+    this.socket = io("http://98.162.221.99:3000");
+
+    this.socket.on("data", data=>{
+      this.parseSeverData(data);
+      this.updateGridGraphics();
+    });
+
+    this.socket.on("noMoves", function(){
+      alert(this.turn + " has no moves available!\nPassing turn to " + this.opponent());
+    })
+
+    this.socket.on("end", winner=>{
+      this.endGame(winner);
+    })
+  }
+
+  //unhide and draw the grid
+  private initBoard(){
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    this.context = canvasEl.getContext('2d');
+
+    canvasEl.width = this.gridPixelWidth;
+    canvasEl.height = this.gridPixelHeight;
+    this.createGrid();
   }
 }
