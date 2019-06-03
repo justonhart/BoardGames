@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import io from "socket.io-client";
 
+const SERVER_ADDRESS = "localhost:3000"
+
 @Component({
   selector: 'app-online-reversi',
   templateUrl: './online-reversi.component.html',
@@ -12,7 +14,7 @@ export class OnlineReversiComponent implements OnInit {
   @ViewChild('canvas') public canvas: ElementRef;
 
   //the Socket.io socket that conneccts to the game server
-  private socket: any;
+  private io: any;
 
 
   //the width of each cell in the grid
@@ -36,12 +38,14 @@ export class OnlineReversiComponent implements OnInit {
   private whiteScore;
   private grid;
 
-  private name;
+  private name: string;
+  private activate: number;
 
   constructor() {
   }
 
   ngOnInit() {
+    this.connectGame();
   }
 
   ngAfterViewInit(){
@@ -147,7 +151,7 @@ export class OnlineReversiComponent implements OnInit {
 
   //emit the move to the sever
   private sendMove(x: number, y: number){
-    this.socket.emit("move", {x,y});
+    this.io.emit("move", {x,y});
   }
 
   //handle data received from server
@@ -165,7 +169,7 @@ export class OnlineReversiComponent implements OnInit {
 
   //reset the board state
   private reset(){
-    this.socket.emit("reset");
+    this.io.emit("reset");
   }
   
   //get the opponent's color
@@ -179,8 +183,8 @@ export class OnlineReversiComponent implements OnInit {
   private start(name: string){
     if(name){
       this.name = name;
+      this.io.emit("name", this.name);
       this.initBoard();
-      this.connectGame();
     }
   }
 
@@ -188,19 +192,23 @@ export class OnlineReversiComponent implements OnInit {
   private connectGame(){
     
     //connect the component to the reversi server
-    this.socket = io("http://98.162.221.99:3000");
+    this.io = io(SERVER_ADDRESS);
 
-    this.socket.on("data", data=>{
+    this.io.on("data", data=>{
       this.parseSeverData(data);
       this.updateGridGraphics();
     });
 
-    this.socket.on("noMoves", function(){
+    this.io.on("noMoves", ()=>{
       alert(this.turn + " has no moves available!\nPassing turn to " + this.opponent());
-    })
+    });
 
-    this.socket.on("end", winner=>{
+    this.io.on("end", winner=>{
       this.endGame(winner);
+    });
+
+    this.io.on("activate", ()=>{
+      this.activate = 1;
     })
   }
 

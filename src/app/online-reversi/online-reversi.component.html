@@ -1,4 +1,4 @@
-<div [hidden]="!name">
+<div [hidden]="!activate">
   <div>
     Black Score: {{blackScore}}
     &nbsp;&nbsp;White Score: {{whiteScore}}
@@ -11,9 +11,9 @@
   <div><button class="e" (click)="reset()">Reset</button></div>
 </div>
 
-<div *ngIf="name==undefined">
+<div *ngIf="!activate">
   <div>
-    <h2>Please enter your name:</h2><br>
+    <h2>Enter your name:</h2><br>
     <input #nameField type="text"><br>
     <button class="e" (click)="start(nameField.value)">Submit</button>
   </div>
