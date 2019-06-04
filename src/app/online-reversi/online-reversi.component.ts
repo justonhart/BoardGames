@@ -38,11 +38,13 @@ export class OnlineReversiComponent implements OnInit {
   private whiteScore;
   private grid;
 
+  private black;
+  private white;
+
   private name: string;
   private activate: number;
-
-  constructor() {
-  }
+  
+  public users;
 
   ngOnInit() {
     this.connectGame();
@@ -194,6 +196,10 @@ export class OnlineReversiComponent implements OnInit {
     //connect the component to the reversi server
     this.io = io(SERVER_ADDRESS);
 
+
+    this.io.on("users", users =>{
+      this.users = users;
+    });
     this.io.on("data", data=>{
       this.parseSeverData(data);
       this.updateGridGraphics();

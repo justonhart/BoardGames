@@ -1,20 +1,41 @@
 <div [hidden]="!activate">
-  <div>
+
+  <div class="userlist">
+    <p>Users online:</p>
+    <ul>
+      <li *ngFor="let user of users">
+        {{user.name}}
+      </li>
+    </ul>
+    
+  </div>
+      
+  <div class='c'>
     Black Score: {{blackScore}}
     &nbsp;&nbsp;White Score: {{whiteScore}}
     &nbsp;&nbsp;Current turn: {{turn}}
     <!-- <button class="e" (click)="toggleTurn()">Pass turn</button> -->
   </div>
-  <div>
-    <canvas class="e" #canvas (click)="onClick($event)" ></canvas>
+  <div class='c'>
+    <canvas #canvas (click)="onClick($event)" ></canvas>
   </div>
-  <div><button class="e" (click)="reset()">Reset</button></div>
+  <div class='c'>
+    Black:&nbsp;{{black}}
+    <button *ngIf="!black">Play</button>
+    &nbsp;&nbsp;
+    
+    White:&nbsp;{{white}}
+    <button *ngIf="!white">Play</button>
+  </div>
+  <div class='c'><button (click)="reset()">Reset</button></div>
+  
 </div>
 
-<div *ngIf="!activate">
-  <div>
-    <h2>Enter your name:</h2><br>
+<div class='c' *ngIf="!activate">
+  <div class='c'>
+    <h2>Enter your name:</h2>
+    <p *ngIf="users">Users online: {{users.length}}</p>
     <input #nameField type="text"><br>
-    <button class="e" (click)="start(nameField.value)">Submit</button>
+    <button (click)="start(nameField.value)">Submit</button>
   </div>
 </div>

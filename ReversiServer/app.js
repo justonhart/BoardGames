@@ -14,8 +14,11 @@ const HEIGHT = 8;
 
 //manage all client signals
 io.on("connection", socket =>{
+
+  socket.emit("users", clientUserList());
+
   socket.on("move", move=>{
-    if(users[socket.id] && users[socket.id].active){
+    if(users[socket.id] && users[socket.id].color == turn){
       input(move.x,move.y);
       sendDataToUsers();
     }
@@ -28,10 +31,11 @@ io.on("connection", socket =>{
 
   socket.on("name", name=>{
     if(!_.find(users, function(u){ return u.name == name;})){
-      users[socket.id] = {'name' : name, 'active': Object.keys(users).length < 2? 1 : 0 };
+      users[socket.id] = {'name' : name, 'color': undefined };
       console.log(users);
       socket.join('users');
       socket.emit('activate');
+      io.emit("users", clientUserList());
       socket.emit("data", {grid, blackScore, whiteScore, turn});
     }
   });
@@ -40,6 +44,7 @@ io.on("connection", socket =>{
     if(users[socket.id]){
       console.log(users[socket.id].name + " disconnected! Removing from list");
       delete users[socket.id];
+      io.emit("users", clientUserList());
     }
   });
 });
@@ -74,9 +79,9 @@ function initGameState(){
 
 function opponent(){
   if(turn == "white")
-      return "black";
+    return "black";
   else 
-      return "white";
+    return "white";
 }
 
 function updateGrid(x, y){
@@ -370,4 +375,13 @@ function resetGame(){
   initGameboard();
   console.log("Gameboard reset!");
   sendDataToUsers();
+}
+
+function clientUserList(){
+  let list = [];
+  _.each(users, user => {
+    list.push({'name' : user.name, 'color': user.color});
+  });
+
+  return list;
 }
