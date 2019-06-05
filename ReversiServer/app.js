@@ -25,8 +25,10 @@ io.on("connection", socket =>{
   });
 
   socket.on("reset", function(){
-    resetGame();
-    sendDataToUsers();
+    if(users[socket.id] && user[socket.id].color){
+      resetGame();
+      sendDataToUsers()
+    }
   });
 
   socket.on("name", name=>{
@@ -47,6 +49,20 @@ io.on("connection", socket =>{
       io.emit("users", clientUserList());
     }
   });
+
+  socket.on("joinReq", color=>{
+    if(users[socket.id] && !_.find(users, u=>{ return u.color == color;})){
+      users[socket.id].color = color;
+      io.emit("users", clientUserList());
+    }
+  });
+
+  socket.on("drop", ()=>{
+    if(users[socket.id] && users[socket.id].color){
+      users[socket.id].color = undefined;
+      io.emit("users", clientUserList());
+    }
+  })
 });
 
 Http.listen(3000, () => {

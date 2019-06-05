@@ -5,6 +5,7 @@
     <ul>
       <li *ngFor="let user of users">
         {{user.name}}
+        <span *ngIf='user.color'>:&nbsp;{{user.color}}</span>
       </li>
     </ul>
     
@@ -21,11 +22,13 @@
   </div>
   <div class='c'>
     Black:&nbsp;{{black}}
-    <button *ngIf="!black">Play</button>
+    <button *ngIf="!black" (click)="join('black')">Play</button>
+    <button *ngIf="name == black" (click)="drop()">X</button>
     &nbsp;&nbsp;
     
     White:&nbsp;{{white}}
-    <button *ngIf="!white">Play</button>
+    <button *ngIf="!white" (click)="join('white')">Play</button>
+    <button *ngIf="name == white" (click)="drop()">X</button>
   </div>
   <div class='c'><button (click)="reset()">Reset</button></div>
   

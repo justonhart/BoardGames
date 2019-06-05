@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import io from "socket.io-client";
+import * as _ from 'lodash';
 
-const SERVER_ADDRESS = "localhost:3000"
+const SERVER_ADDRESS = "98.162.221.99:3000"
 
 @Component({
   selector: 'app-online-reversi',
@@ -199,6 +200,18 @@ export class OnlineReversiComponent implements OnInit {
 
     this.io.on("users", users =>{
       this.users = users;
+
+      let black = _.find(users, u=>{return u.color == 'black';})
+      if(black)
+        this.black = black.name;
+      else
+        this.black = undefined;
+
+      let white = _.find(users, u=>{return u.color == 'white';})
+      if(white)
+        this.white = white.name;
+      else
+        this.white = undefined;
     });
     this.io.on("data", data=>{
       this.parseSeverData(data);
@@ -226,5 +239,13 @@ export class OnlineReversiComponent implements OnInit {
     canvasEl.width = this.gridPixelWidth;
     canvasEl.height = this.gridPixelHeight;
     this.createGrid();
+  }
+
+  private join(color: string): void{
+    this.io.emit('joinReq', color);
+  }
+
+  private drop(): void{
+    this.io.emit('drop');
   }
 }
