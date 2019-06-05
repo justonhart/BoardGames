@@ -25,7 +25,7 @@ io.on("connection", socket =>{
   });
 
   socket.on("reset", function(){
-    if(users[socket.id] && user[socket.id].color){
+    if(users[socket.id] && users[socket.id].color){
       resetGame();
       sendDataToUsers()
     }
