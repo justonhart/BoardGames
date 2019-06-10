@@ -2,6 +2,15 @@ const Express = require("express")();
 const Http = require("http").Server(Express);
 const io = require("socket.io")(Http);
 const _ = require('lodash');
+const mysql = require('mysql');
+
+var database = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'reversi'
+});
+
 
 var users;
 var grid;
@@ -17,6 +26,12 @@ io.on("connection", socket =>{
 
   socket.emit("users", clientUserList());
 
+  //send leaderboards
+  database.query("SELECT winner FROM matches", function (err, result, fields) {
+    if (err) throw err;
+    socket.emit("scores",JSON.stringify(result));
+  });
+  
   socket.on("move", move=>{
     if(users[socket.id] && users[socket.id].color == turn){
       input(move.x,move.y);
@@ -70,6 +85,11 @@ Http.listen(3000, () => {
   initGameboard();
   initGameState();
   console.log("Listening at :3000...");
+
+  console.log("Connecting to MySQL server...");
+  database.connect();
+
+  matchHistory();
 });
 
 function initGameboard(){
@@ -350,9 +370,11 @@ function checkMovesBase() {
   if(available == 0){
     if(blackScore > whiteScore){
       io.emit("end", "black");
+      database.query('INSERT INTO matches(winner) VALUES("'+_.find(users, u=>{ return u.color == "black";}).name+'");');
     }
     else if(blackScore < whiteScore){
       io.emit("end", "white");
+      database.query('INSERT INTO matches(winner) VALUES("'+_.find(users, u=>{ return u.color == "white";}).name+'");');
     }
     else{
       io.emit("end", "tie");
@@ -362,8 +384,6 @@ function checkMovesBase() {
     io.emit("noMoves");
     sendDataToUsers();
   }
-
-
 }
 
 function sendDataToUsers(){
@@ -374,16 +394,16 @@ function checkScore(){
   if(blackScore + whiteScore == 64){
     if(blackScore > whiteScore){
       io.emit("end", "black");
+      database.query('INSERT INTO matches(winner) VALUES("'+_.find(users, u=>{ return u.color == "black";}).name+'");');
     }
     else if(blackScore < whiteScore){
       io.emit("end", "white");
+      database.query('INSERT INTO matches(winner) VALUES("'+_.find(users, u=>{ return u.color == "white";}).name+'");');
     }
     else{
       io.emit("end", "tie");
     }
   }
-
-  
 }
   
 function resetGame(){
@@ -400,4 +420,12 @@ function clientUserList(){
   });
 
   return list;
+}
+
+function matchHistory(){
+  database.query("SELECT winner FROM matches", function (err, result, fields) {
+    if (err) throw err;
+    console.log(JSON.stringify(result));
+    return JSON.stringify(result);
+  });
 }
