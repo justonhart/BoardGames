@@ -36,5 +36,29 @@ canvas{
     list-style-type: none;
 }
 
+.leaderboard{
+    text-align: center;
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 200 px; /* Set the width of the sidebar */
+    position: absolute; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 1; /* Stay at the top */
+    right: 0;
+    padding-right: 5px;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+.leaderboard p {
+    padding-left: 10px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #111;
+}
+
+.leaderboard li {
+    list-style-type: none;
+}
+
   
   

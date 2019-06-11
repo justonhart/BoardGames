@@ -2,8 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import io from "socket.io-client";
 import * as _ from 'lodash';
 
-// const SERVER_ADDRESS = "98.162.221.99:3000"
-const SERVER_ADDRESS = "localhost:3000"
+const SERVER_ADDRESS = "98.162.221.99:3000"
+// const SERVER_ADDRESS = "localhost:3000"
 
 @Component({
   selector: 'app-online-reversi',
@@ -233,8 +233,14 @@ export class OnlineReversiComponent implements OnInit {
     });
 
     this.io.on("scores", data=>{
-      console.log(data)
-      console.log(_.countBy(JSON.parse(data), 'winner'));
+      let d = _.countBy(JSON.parse(data), 'winner');
+      let l = [];
+      _.forEach(d, function(key, value){
+        l.push({name: value, wins: key});
+      });
+
+      this.leaderboards = l;
+      console.log(this.leaderboards);
     });
   }
 

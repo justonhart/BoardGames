@@ -8,9 +8,17 @@
         <span *ngIf='user.color'>:&nbsp;{{user.color}}</span>
       </li>
     </ul>
-    
   </div>
-      
+  
+  <div class="leaderboard">
+    <p>Leaderboards:</p>
+    <ul>
+      <li *ngFor="let entry of leaderboards">
+        {{entry.name}}:&nbsp;{{entry.wins}}
+      </li>
+    </ul>
+  </div>
+
   <div class='c'>
     Black Score: {{blackScore}}
     &nbsp;&nbsp;White Score: {{whiteScore}}
@@ -35,6 +43,16 @@
 </div>
 
 <div class='c' *ngIf="!activate">
+
+    <div class="leaderboard">
+      <p>Leaderboards:</p>
+      <ul>
+        <li *ngFor="let entry of leaderboards">
+          {{entry.name}}:&nbsp;{{entry.wins}}
+        </li>
+      </ul>
+    </div>
+
   <div class='c'>
     <h2>Enter your name:</h2>
     <p *ngIf="users">Users online: {{users.length}}</p>
@@ -42,3 +60,5 @@
     <button (click)="start(nameField.value)">Submit</button>
   </div>
 </div>
+
+
